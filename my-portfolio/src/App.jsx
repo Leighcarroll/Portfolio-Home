@@ -231,7 +231,7 @@ export default function Portfolio() {
       <StarCursor pos={mouse} />
 
       {/* HERO */}
-      <section id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", paddingTop: 60 }}>
+      <section id="home" style={{ width: "100%", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", paddingTop: 60 }}>
         <HeroCanvas />
         <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 55% 55%, ${ACCENT}18 0%, transparent 65%)` }} />
         <div style={{ textAlign: "center", zIndex: 1, padding: "0 24px", maxWidth: 760 }}>
