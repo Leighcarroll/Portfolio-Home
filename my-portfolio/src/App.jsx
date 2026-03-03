@@ -8,7 +8,7 @@ const PROJECTS = [
     tags: ["E-Commerce", "Sass", "Frontend"],
     desc: "Adding custom Sass architecture to redesign legacy websites with a fully customisable, modern template system.",
     highlights: ["Easily customisable Sass template", "Legacy platform compliance", "Technical problem solving"],
-    url: null, year: "2025", emoji: "⚓",
+    url: "https://leighcarroll.us/i/ecommerce-template", year: "2025", emoji: "⚓",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const PROJECTS = [
     tags: ["E-Commerce", "B2B UX", "German Market"],
     desc: "A full-featured B2B wholesale beverage platform serving gastronomy and trade clients across Thuringia. Designed for bulk ordering, repeat purchases, and efficient account management.",
     highlights: ["Custom B2B account portal", "Wishlist & repeat-order UX", "Category-driven navigation", "Mobile-first responsive layout"],
-    url: "https://www.tgh24.de", year: "2026", emoji: "🍺",
+    url: "https://leighcarroll.us/i/legacy-shop-redesign", year: "2026", emoji: "🍺",
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const PROJECTS = [
     tags: ["Branding", "Logo Design", "Web Design"],
     desc: "Logo, branding guidelines, and landing page design for an eating disorder therapy group.",
     highlights: ["Custom logo built with customer feedback", "Branding for long-term use and growth", "Targeted SEO and content for website landing page"],
-    url: null, year: "2024", emoji: "🌳",
+    url: "https://leighcarroll.us/i/four-roots-collective", year: "2024", emoji: "🌳",
   },
   {
     id: 4,
@@ -35,7 +35,7 @@ const PROJECTS = [
     tags: ["UX Research", "UI Design", "Figma"],
     desc: "A supplemental app concept created during an IronHack UX Bootcamp, designed to bring extra value to health insurance customers.",
     highlights: ["UX research — primary and secondary", "UI design and components", "Figma prototyping and testing"],
-    url: null, year: "2024", emoji: "🩹",
+    url: "https://leighcarroll.us/i/tempocare", year: "2024", emoji: "🩹",
   },
   {
     id: 5,
@@ -44,7 +44,7 @@ const PROJECTS = [
     tags: ["Gamification", "UX/UI", "Sustainability"],
     desc: "In August 2023 I worked with the Prosumio team based out of Berlin on a UX project as part of the IronHack UX/UI Bootcamp. Prosumio is a game teaching teenagers environmental activism and sustainable behaviours.",
     highlights: ["Gamification", "UI design and brand research", "Game testing"],
-    url: null, year: "2023", emoji: "🌍",
+    url: "https://leighcarroll.us/i/prosumio", year: "2023", emoji: "🌍",
   },
   {
     id: 6,
@@ -53,7 +53,7 @@ const PROJECTS = [
     tags: ["Graphic Design", "Creative Direction", "Print & Web"],
     desc: "Graphic design and creative direction work for Marley Spoon brands.",
     highlights: ["Photographic direction and brainstorming", "Graphic design", "Print and web design"],
-    url: null, year: "2022", emoji: "🥗",
+    url: "https://leighcarroll.us/i/marley-spoon-brands", year: "2022", emoji: "🥗",
   },
 ];
 
@@ -180,7 +180,10 @@ function ProjectCard({ p, index }) {
   const vis = useFadeIn(ref);
 
   return (
-    <div ref={ref} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{
+    <a ref={ref} href={p.url || "#"} target="_parent" rel="noreferrer"
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ textDecoration: "none", display: "block",
+
       opacity: vis ? 1 : 0,
       transform: vis ? (hov ? "translateY(-6px)" : "translateY(0)") : "translateY(32px)",
       transition: `opacity 0.7s ease ${index * 80}ms, transform 0.5s cubic-bezier(.4,0,.2,1)`,
@@ -194,15 +197,15 @@ function ProjectCard({ p, index }) {
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {p.tags.map(t => (
             <span key={t} style={{
-              background: `${ACCENT}33`, color: "#4a7a82",
-              borderRadius: 99, padding: "3px 12px", fontSize: 11, fontWeight: 700, letterSpacing: 0.5
+              background: `${ACCENT}33`, color: "#233b3f",
+              borderRadius: 99, padding: "3px 12px", fontSize: 12, fontWeight: 700, letterSpacing: 0.5
             }}>{t}</span>
           ))}
         </div>
-        <span style={{ color: "#b0bec2", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>{p.year}</span>
+        <span style={{ color: "#36585e", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>{p.year}</span>
       </div>
       <h3 style={{ fontSize: 20, fontWeight: 800, color: DARK, margin: "0 0 10px", letterSpacing: -0.3 }}>{p.title}</h3>
-      <p style={{ color: "#7a8f93", fontSize: 14, lineHeight: 1.75, margin: "0 0 20px" }}>{p.desc}</p>
+      <p style={{ color: "#5c696b", fontSize: 14, lineHeight: 1.75, margin: "0 0 20px" }}>{p.desc}</p>
       <ul style={{ padding: 0, margin: "0 0 24px", listStyle: "none" }}>
         {p.highlights.map(h => (
           <li key={h} style={{ color: "#8fa5a9", fontSize: 13, padding: "3px 0", display: "flex", gap: 10, alignItems: "center" }}>
@@ -216,22 +219,31 @@ function ProjectCard({ p, index }) {
           color: "#4a7a82", fontWeight: 700, fontSize: 13, textDecoration: "none",
           borderBottom: `1.5px solid ${ACCENT}`, paddingBottom: 2,
           transition: "color 0.2s", letterSpacing: 0.3
-        }}>View Live Site ↗</a>
+        }}>View Project ↗</a>
       )}
-    </div>
+    </a>
   );
 }
 
 export default function Portfolio() {
   const mouse = useMousePos();
   const scrollTo = id => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  
+  useEffect(() => {
+    const sendHeight = () => {
+      window.parent.postMessage(document.body.scrollHeight, '*');
+    };
+    sendHeight();
+    window.addEventListener('resize', sendHeight);
+    return () => window.removeEventListener('resize', sendHeight);
+  }, []);
 
   return (
     <div style={{ background: BG, minHeight: "100vh", fontFamily: "'Segoe UI', system-ui, sans-serif", color: DARK, overflowX: "hidden" }}>
       <StarCursor pos={mouse} />
 
       {/* HERO */}
-      <section id="home" style={{ width: "100%", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", paddingTop: 60 }}>
+      <section id="home" style={{ width: "100%", height: "450", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", paddingTop: 60 }}>
         <HeroCanvas />
         <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 55% 55%, ${ACCENT}18 0%, transparent 65%)` }} />
         <div style={{ textAlign: "center", zIndex: 1, padding: "0 24px", maxWidth: 760 }}>
@@ -256,7 +268,7 @@ export default function Portfolio() {
           </FadeSection>
           <FadeSection delay={300}>
             <p style={{ color: "#8fa5a9", fontSize: 17, lineHeight: 1.8, marginBottom: 44, maxWidth: 480, margin: "0 auto 44px" }}>
-              Website, branding and UX/UI designer focused on e-commerce and B2B.
+              Website, branding, UX/UI - focus on e-commerce and B2B.
             </p>
           </FadeSection>
           <FadeSection delay={450}>
@@ -280,10 +292,10 @@ export default function Portfolio() {
             </div>
           </FadeSection>
         </div>
-        <div style={{ position: "absolute", bottom: 36, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+        {/* <div style={{ position: "absolute", bottom: 36, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
           <span style={{ color: "#b8cdd0", fontSize: 11, fontWeight: 600, letterSpacing: 2 }}>SCROLL</span>
           <div style={{ width: 1, height: 40, background: `linear-gradient(to bottom, ${ACCENT}, transparent)`, animation: "pulse 2s infinite" }} />
-        </div>
+        </div> */}
       </section>
 
       {/* WORK */}
