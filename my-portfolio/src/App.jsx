@@ -8,7 +8,7 @@ const PROJECTS = [
     tags: ["E-Commerce", "Sass", "Frontend"],
     desc: "Adding custom Sass architecture to redesign legacy websites with a fully customisable, modern template system.",
     highlights: ["Easily customisable Sass template", "Legacy platform compliance", "Technical problem solving"],
-    url: "https://leighcarroll.us/i/ecommerce-template", year: "2025", emoji: "⚓",
+    url: null, year: "2025", emoji: "⚓",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const PROJECTS = [
     tags: ["E-Commerce", "B2B UX", "German Market"],
     desc: "A full-featured B2B wholesale beverage platform serving gastronomy and trade clients across Thuringia. Designed for bulk ordering, repeat purchases, and efficient account management.",
     highlights: ["Custom B2B account portal", "Wishlist & repeat-order UX", "Category-driven navigation", "Mobile-first responsive layout"],
-    url: "https://leighcarroll.us/i/legacy-shop-redesign", year: "2026", emoji: "🍺",
+    url: "https://www.tgh24.de", year: "2026", emoji: "🍺",
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const PROJECTS = [
     tags: ["Branding", "Logo Design", "Web Design"],
     desc: "Logo, branding guidelines, and landing page design for an eating disorder therapy group.",
     highlights: ["Custom logo built with customer feedback", "Branding for long-term use and growth", "Targeted SEO and content for website landing page"],
-    url: "https://leighcarroll.us/i/four-roots-collective", year: "2024", emoji: "🌳",
+    url: null, year: "2024", emoji: "🌳",
   },
   {
     id: 4,
@@ -35,7 +35,7 @@ const PROJECTS = [
     tags: ["UX Research", "UI Design", "Figma"],
     desc: "A supplemental app concept created during an IronHack UX Bootcamp, designed to bring extra value to health insurance customers.",
     highlights: ["UX research — primary and secondary", "UI design and components", "Figma prototyping and testing"],
-    url: "https://leighcarroll.us/i/tempocare", year: "2024", emoji: "🩹",
+    url: null, year: "2024", emoji: "🩹",
   },
   {
     id: 5,
@@ -44,7 +44,7 @@ const PROJECTS = [
     tags: ["Gamification", "UX/UI", "Sustainability"],
     desc: "In August 2023 I worked with the Prosumio team based out of Berlin on a UX project as part of the IronHack UX/UI Bootcamp. Prosumio is a game teaching teenagers environmental activism and sustainable behaviours.",
     highlights: ["Gamification", "UI design and brand research", "Game testing"],
-    url: "https://leighcarroll.us/i/prosumio", year: "2023", emoji: "🌍",
+    url: null, year: "2023", emoji: "🌍",
   },
   {
     id: 6,
@@ -53,7 +53,7 @@ const PROJECTS = [
     tags: ["Graphic Design", "Creative Direction", "Print & Web"],
     desc: "Graphic design and creative direction work for Marley Spoon brands.",
     highlights: ["Photographic direction and brainstorming", "Graphic design", "Print and web design"],
-    url: "https://leighcarroll.us/i/marley-spoon-brands", year: "2022", emoji: "🥗",
+    url: null, year: "2022", emoji: "🥗",
   },
 ];
 
@@ -94,9 +94,11 @@ function FadeSection({ children, style = {}, delay = 0 }) {
   );
 }
 
+const TRAIL_COLORS = ["#C4DEE3","#4DB6AC","#4DB6AC","#FFB74D","#FF6F61","#FF6F61","#FF6F61","#FF6F61"];
+
 function StarCursor({ pos }) {
   const [trail, setTrail] = useState([]);
-  useEffect(() => { setTrail(t => [...t.slice(-10), pos]); }, [pos]);
+  useEffect(() => { setTrail(t => [...t.slice(-24), pos]); }, [pos]);
 
   const starPath = (() => {
     const pts = [], n = 7, outer = 12, inner = 5;
@@ -108,71 +110,37 @@ function StarCursor({ pos }) {
     return `M${pts.join("L")}Z`;
   })();
 
-  const starColor = "#7aadb5";
   return (
     <>
-      {trail.map((p, i) => (
-        <svg key={i} style={{
-          position: "fixed", left: p.x, top: p.y, pointerEvents: "none", zIndex: 9999,
-          transform: "translate(-50%,-50%)",
-          opacity: (i / trail.length) * 0.22,
-          width: 8 + i * 1.3, height: 8 + i * 1.3,
-        }} viewBox="0 0 24 24">
-          <path d={starPath} fill={starColor} />
-        </svg>
-      ))}
+      {trail.map((p, i) => {
+        const t = i / trail.length;
+        const colorIdx = Math.floor((1 - t) * (TRAIL_COLORS.length - 1));
+        const size = 5 + t * 16;
+        return (
+          <svg key={i} style={{
+            position: "fixed", left: p.x, top: p.y, pointerEvents: "none", zIndex: 9999,
+            transform: "translate(-50%,-50%)",
+            opacity: t * 0.9,
+            width: size, height: size,
+          }} viewBox="0 0 24 24">
+            <path d={starPath} fill={TRAIL_COLORS[colorIdx]} />
+          </svg>
+        );
+      })}
+      {/* Real system cursor arrow */}
       <svg style={{
-        position: "fixed", left: pos.x, top: pos.y, pointerEvents: "none", zIndex: 9999,
-        transform: "translate(-50%,-50%)",
-        transition: "left 0.07s, top 0.07s",
-        width: 26, height: 26,
-      }} viewBox="0 0 24 24">
-        <path d={starPath} fill={starColor} />
+        position: "fixed", left: pos.x, top: pos.y, pointerEvents: "none", zIndex: 10000,
+        transform: "translate(0, 0)",
+        transition: "left 0.04s, top 0.04s",
+        width: 20, height: 20,
+      }} viewBox="0 0 24 24" fill="none">
+        <path d="M4 2L4 18L8.5 13.5L11.5 20L13.5 19L10.5 12.5L17 12.5L4 2Z" fill="#1a1f2e" stroke="#fff" strokeWidth="1" strokeLinejoin="round"/>
       </svg>
     </>
   );
 }
 
-function HeroCanvas() {
-  const canvasRef = useRef();
-  useEffect(() => {
-    const c = canvasRef.current;
-    if (!c) return;
-    const ctx = c.getContext("2d");
-    let w = c.width = c.offsetWidth;
-    let h = c.height = c.offsetHeight;
-    const pts = Array.from({ length: 50 }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
-      r: Math.random() * 2 + 1,
-    }));
-    let raf;
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      pts.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = ACCENT + "99"; ctx.fill();
-      });
-      pts.forEach((a, i) => pts.slice(i + 1).forEach(b => {
-        const d = Math.hypot(a.x - b.x, a.y - b.y);
-        if (d < 130) {
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(196,222,227,${0.18 * (1 - d / 130)})`;
-          ctx.lineWidth = 0.8; ctx.stroke();
-        }
-      }));
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    const ro = new ResizeObserver(() => { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; });
-    ro.observe(c);
-    return () => { cancelAnimationFrame(raf); ro.disconnect(); };
-  }, []);
-  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.6 }} />;
-}
+function HeroCanvas() { return null; }
 
 function ProjectCard({ p, index }) {
   const [hov, setHov] = useState(false);
@@ -180,10 +148,7 @@ function ProjectCard({ p, index }) {
   const vis = useFadeIn(ref);
 
   return (
-    <a ref={ref} href={p.url || "#"} target="_parent" rel="noreferrer"
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ textDecoration: "none", display: "block",
-
+    <div ref={ref} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{
       opacity: vis ? 1 : 0,
       transform: vis ? (hov ? "translateY(-6px)" : "translateY(0)") : "translateY(32px)",
       transition: `opacity 0.7s ease ${index * 80}ms, transform 0.5s cubic-bezier(.4,0,.2,1)`,
@@ -197,15 +162,15 @@ function ProjectCard({ p, index }) {
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {p.tags.map(t => (
             <span key={t} style={{
-              background: `${ACCENT}33`, color: "#233b3f",
-              borderRadius: 99, padding: "3px 12px", fontSize: 12, fontWeight: 700, letterSpacing: 0.5
+              background: `${ACCENT}33`, color: "#4a7a82",
+              borderRadius: 99, padding: "3px 12px", fontSize: 11, fontWeight: 700, letterSpacing: 0.5
             }}>{t}</span>
           ))}
         </div>
-        <span style={{ color: "#36585e", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>{p.year}</span>
+        <span style={{ color: "#b0bec2", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>{p.year}</span>
       </div>
       <h3 style={{ fontSize: 20, fontWeight: 800, color: DARK, margin: "0 0 10px", letterSpacing: -0.3 }}>{p.title}</h3>
-      <p style={{ color: "#5c696b", fontSize: 14, lineHeight: 1.75, margin: "0 0 20px" }}>{p.desc}</p>
+      <p style={{ color: "#7a8f93", fontSize: 14, lineHeight: 1.75, margin: "0 0 20px" }}>{p.desc}</p>
       <ul style={{ padding: 0, margin: "0 0 24px", listStyle: "none" }}>
         {p.highlights.map(h => (
           <li key={h} style={{ color: "#8fa5a9", fontSize: 13, padding: "3px 0", display: "flex", gap: 10, alignItems: "center" }}>
@@ -219,31 +184,22 @@ function ProjectCard({ p, index }) {
           color: "#4a7a82", fontWeight: 700, fontSize: 13, textDecoration: "none",
           borderBottom: `1.5px solid ${ACCENT}`, paddingBottom: 2,
           transition: "color 0.2s", letterSpacing: 0.3
-        }}>View Project ↗</a>
+        }}>View Live Site ↗</a>
       )}
-    </a>
+    </div>
   );
 }
 
 export default function Portfolio() {
   const mouse = useMousePos();
   const scrollTo = id => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  
-  useEffect(() => {
-    const sendHeight = () => {
-      window.parent.postMessage(document.body.scrollHeight, '*');
-    };
-    sendHeight();
-    window.addEventListener('resize', sendHeight);
-    return () => window.removeEventListener('resize', sendHeight);
-  }, []);
 
   return (
-    <div style={{ background: BG, minHeight: "100vh", fontFamily: "'Segoe UI', system-ui, sans-serif", color: DARK, overflowX: "hidden" }}>
+    <div style={{ background: BG, minHeight: "100vh", width: "100%", maxWidth: "100%", fontFamily: "'Segoe UI', system-ui, sans-serif", color: DARK, overflowX: "hidden" }}>
       <StarCursor pos={mouse} />
 
       {/* HERO */}
-      <section id="home" style={{ width: "100%", height: "450", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", paddingTop: 60 }}>
+      <section id="home" style={{ height: 450, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
         <HeroCanvas />
         <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 55% 55%, ${ACCENT}18 0%, transparent 65%)` }} />
         <div style={{ textAlign: "center", zIndex: 1, padding: "0 24px", maxWidth: 760 }}>
@@ -267,8 +223,8 @@ export default function Portfolio() {
             </h1>
           </FadeSection>
           <FadeSection delay={300}>
-            <p style={{ color: "#8fa5a9", fontSize: 17, lineHeight: 1.8, marginBottom: 44, maxWidth: 480, margin: "0 auto 44px" }}>
-              Website, branding, UX/UI - focus on e-commerce and B2B.
+            <p style={{ color: "#8fa5a9", fontSize: 17, lineHeight: 1.8, maxWidth: 480, margin: "0 auto 44px" }}>
+              Website, branding and UX/UI designer focused on e-commerce and B2B.
             </p>
           </FadeSection>
           <FadeSection delay={450}>
@@ -292,10 +248,10 @@ export default function Portfolio() {
             </div>
           </FadeSection>
         </div>
-        {/* <div style={{ position: "absolute", bottom: 36, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+        <div style={{ position: "absolute", bottom: 36, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
           <span style={{ color: "#b8cdd0", fontSize: 11, fontWeight: 600, letterSpacing: 2 }}>SCROLL</span>
           <div style={{ width: 1, height: 40, background: `linear-gradient(to bottom, ${ACCENT}, transparent)`, animation: "pulse 2s infinite" }} />
-        </div> */}
+        </div>
       </section>
 
       {/* WORK */}
@@ -321,20 +277,25 @@ export default function Portfolio() {
               Have a project in mind? I'd love to hear about it.
             </p>
             <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", marginBottom: 48 }}>
-              {[["📧", "hello@alex.dev"], ["💼", "LinkedIn"], ["🐙", "GitHub"]].map(([icon, label]) => (
-                <div key={label} style={{
+              {[
+                ["📧", "leighcarroll4@gmail.com", "mailto:leighcarroll4@gmail.com"],
+                ["💼", "LinkedIn", "https://www.linkedin.com/in/leigh-carroll-004/"],
+                ["🐙", "GitHub", "https://github.com/Leighcarroll"]
+              ].map(([icon, label, href]) => (
+                <a key={label} href={href} target="_blank" rel="noreferrer" style={{
                   background: BG, border: `1.5px solid #e8edf0`, borderRadius: 12,
                   padding: "14px 24px", display: "flex", alignItems: "center", gap: 10,
-                  cursor: "pointer", transition: "all 0.25s", fontSize: 14, fontWeight: 600, color: "#5a7a80"
+                  cursor: "pointer", transition: "all 0.25s", fontSize: 14, fontWeight: 600, color: "#5a7a80",
+                  textDecoration: "none"
                 }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 8px 24px ${ACCENT}33`; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = "#e8edf0"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
                 >
                   <span>{icon}</span> {label}
-                </div>
+                </a>
               ))}
             </div>
-            <a href="mailto:hello@alex.dev" style={{
+            <a href="https://leighcarroll.us/i/contact" target="_parent" style={{
               display: "inline-block", background: DARK, color: "#fff",
               fontWeight: 700, fontSize: 15, padding: "14px 40px",
               borderRadius: 10, textDecoration: "none", letterSpacing: 0.3,
@@ -347,10 +308,9 @@ export default function Portfolio() {
         </div>
       </section>
 
-
-
       <style>{`
         * { box-sizing: border-box; }
+        html, body, #root { width: 100%; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
       `}</style>
